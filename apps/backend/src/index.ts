@@ -1,6 +1,7 @@
 import { Elysia } from "elysia";
 import { folderRoutes } from "./modules/folders/folder.routes";
 import { fileRoutes } from "./modules/files/file.routes";
+import cors from "@elysiajs/cors";
 
 const app = new Elysia();
 
@@ -24,6 +25,13 @@ app.onError(({ code, error }) => {
 
 app.use(folderRoutes);
 app.use(fileRoutes);
+
+// Enable CORS
+app.use(
+  cors({
+    origin: "*",
+  }),
+);
 
 app.listen(3100);
 
