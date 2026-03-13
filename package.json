@@ -1,0 +1,13 @@
+{
+  "name": "folder-explorer",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "devDependencies": {
+    "eslint": "^10.0.3",
+    "prettier": "^3.8.1"
+  },
+  "dependencies": {}
+}
