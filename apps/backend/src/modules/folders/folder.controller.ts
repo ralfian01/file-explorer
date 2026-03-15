@@ -5,8 +5,10 @@ import { getPagination } from "../../common/utils/pagination";
 
 const folderService = new FolderService();
 
-export const getFolderTree = async () => {
-  return folderService.getFolderTree();
+export const getFolderTree = async ({ params }: any) => {
+  const id = Number(params?.id) ?? null;
+
+  return folderService.getFolderTree(id);
 };
 
 export const getFolders = async ({ query }: any) => {
@@ -29,7 +31,7 @@ export const getFolderContent = async ({ params }: any) => {
   return folderService.getFolderContent(id);
 };
 
-export const createFolder = async ({ body }: { body: CreateFolderDTOType }) => {
+export const createFolder = async ({ body }: { body: CreateFolderDTOType; }) => {
   const { name, parentId } = body;
 
   if (!name) {
@@ -46,7 +48,7 @@ export const updateFolder = async ({
   params,
   body,
 }: {
-  params: { id: string };
+  params: { id: string; };
   body: UpdateFolderDTOType;
 }) => {
   const id = Number(params.id);
@@ -54,7 +56,7 @@ export const updateFolder = async ({
   return folderService.updateFolder(id, body);
 };
 
-export const deleteFolder = async ({ params }: { params: { id: string } }) => {
+export const deleteFolder = async ({ params }: { params: { id: string; }; }) => {
   const id = Number(params.id);
 
   return folderService.deleteFolder(id);

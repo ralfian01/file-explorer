@@ -1,6 +1,6 @@
 export const getPagination = (page?: number, limit?: number) => {
   const currentPage = page && page > 0 ? page : 1;
-  const perPage = limit && limit > 0 ? limit : 10;
+  const perPage = limit && limit > 0 ? limit : 100;
 
   const skip = (currentPage - 1) * perPage;
 

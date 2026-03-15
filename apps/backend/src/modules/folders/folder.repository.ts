@@ -1,6 +1,15 @@
 import { prisma } from "../../database/prisma";
 
 export class FolderRepository {
+  async getFolderTree(id: number | null) {
+    return prisma.folder.findMany({
+      orderBy: { id: "desc" },
+      where: {
+        parentId: id
+      }
+    });
+  }
+
   async getFolders({ skip, take }: any) {
     return prisma.folder.findMany({
       skip,
@@ -15,12 +24,6 @@ export class FolderRepository {
     return prisma.folder.count();
   }
 
-  async getAllFolders() {
-    return prisma.folder.findMany({
-      orderBy: { id: "asc" },
-    });
-  }
-
   async getSubFolders(parentId: number) {
     return prisma.folder.findMany({
       where: { parentId },
@@ -33,7 +36,7 @@ export class FolderRepository {
     });
   }
 
-  async createFolder(data: { name: string; parentId?: number | null }) {
+  async createFolder(data: { name: string; parentId?: number | null; }) {
     return prisma.folder.create({
       data: {
         name: data.name,
@@ -42,7 +45,7 @@ export class FolderRepository {
     });
   }
 
-  async updateFolder(id: number, data: { name?: string; parentId?: number }) {
+  async updateFolder(id: number, data: { name?: string; parentId?: number; }) {
     return prisma.folder.update({
       where: { id },
       data,

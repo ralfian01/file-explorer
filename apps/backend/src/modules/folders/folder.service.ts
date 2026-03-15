@@ -3,8 +3,8 @@ import { FolderRepository } from "./folder.repository";
 export class FolderService {
   private repo = new FolderRepository();
 
-  async getFolderTree() {
-    return this.repo.getAllFolders();
+  async getFolderTree(id: number | null) {
+    return this.repo.getFolderTree(id);
   }
 
   async getFolders(pagination: any) {
@@ -41,7 +41,7 @@ export class FolderService {
     });
   }
 
-  async updateFolder(id: number, data: { name?: string; parentId?: number }) {
+  async updateFolder(id: number, data: { name?: string; parentId?: number; }) {
     return this.repo.updateFolder(id, data);
   }
 

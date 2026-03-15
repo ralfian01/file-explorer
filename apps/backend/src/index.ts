@@ -1,5 +1,5 @@
 import { Elysia } from "elysia";
-import { folderRoutes } from "./modules/folders/folder.routes";
+import { folderRoutes, folderTreeRoutes } from "./modules/folders/folder.routes";
 import { fileRoutes } from "./modules/files/file.routes";
 import cors from "@elysiajs/cors";
 
@@ -23,6 +23,7 @@ app.onError(({ code, error }) => {
   };
 });
 
+app.use(folderTreeRoutes);
 app.use(folderRoutes);
 app.use(fileRoutes);
 
