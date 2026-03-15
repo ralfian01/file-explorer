@@ -80,9 +80,7 @@ onMounted(() => {
 })
 
 const fileType = (filename: string) => {
-  // 1. Dapatkan ekstensi file dengan cara yang lebih aman
   const parts = filename.split('.')
-  // Ambil bagian terakhir, ubah ke huruf kecil untuk pencocokan case-insensitive
   const ext = parts.length > 1 ? parts[parts.length - 1].toLowerCase() : ''
 
   const formats = {
@@ -99,20 +97,15 @@ const fileType = (filename: string) => {
     pictures: '🏞️',
     documents: '📄',
     archives: '📦',
-    default: '⚙️', // Ikon default jika tipe tidak dikenali
+    default: '⚙️',
   }
 
-  // 2. Gunakan perulangan yang benar untuk mencari tipe
-  // Object.entries(formats) mengubah {key: value} menjadi [ [key, value], [key, value] ]
   for (const [type, extensions] of Object.entries(formats)) {
-    // 3. Jika ekstensi ditemukan di dalam array extensions
     if (extensions.includes(ext)) {
-      // 4. Kembalikan ikon yang sesuai
       return icons[type]
     }
   }
 
-  // 5. Jika tidak ada yang cocok, kembalikan ikon default
   return icons.default
 }
 </script>
@@ -141,7 +134,6 @@ const fileType = (filename: string) => {
           </h2>
 
           <div class="flex gap-2">
-            <!-- Hidden Input -->
             <input type="file" ref="fileInput" class="hidden" @change="handleFileChange" />
 
             <button
@@ -179,7 +171,6 @@ const fileType = (filename: string) => {
                   >📁 {{ folder.name }}</span
                 >
 
-                <!-- Dropdown Elipsis -->
                 <div class="relative">
                   <button
                     @click="toggleDropdown(folder.id, 'folder')"
@@ -220,7 +211,6 @@ const fileType = (filename: string) => {
               >
                 <span>{{ fileType(f.name) }} {{ f.name }}</span>
 
-                <!-- Dropdown Elipsis -->
                 <div class="relative">
                   <button
                     @click="toggleDropdown(f.id, 'file')"

@@ -27,29 +27,25 @@ export const useExplorerStore = defineStore('explorer', {
     },
 
     async toggleFolderInTree(folder: Folder) {
-      this.selectedFolder = folder; // Tetap pilih folder untuk panel konten
+      this.selectedFolder = folder;
 
-      // Jika folder sudah dibuka, tutup saja
       if (this.expandedFolders[folder.id]) {
         this.expandedFolders[folder.id] = false;
         return;
       }
 
-      // Buka folder
       this.expandedFolders[folder.id] = true;
 
-      // Jika subfolder untuk folder ini belum pernah dimuat, panggil API
       if (!this.subfoldersByParentId[folder.id]) {
         this.loading = true;
         try {
           const res = await fetchFolderContent(folder.id);
           this.subfoldersByParentId[folder.id] = res.folders;
-          this.files = res.files; // Update juga files untuk panel kanan
+          this.files = res.files;
         } finally {
           this.loading = false;
         }
       } else {
-        // Jika sudah ada, cukup load ulang konten filenya
         const res = await fetchFolderContent(folder.id);
         this.files = res.files;
       }
@@ -59,6 +55,11 @@ export const useExplorerStore = defineStore('explorer', {
       this.expandedFolders[folder.id] = !this.expandedFolders[folder.id];
       if (this.expandedFolders[folder.id]) {
       }
+    },
+
+    async handleFolderClick(folder: Folder) {
+      this.selectFolderForContent(folder);
+      this.toggleFolderInTree(folder);
     },
 
     async selectFolder(folder: Folder) {
@@ -77,13 +78,9 @@ export const useExplorerStore = defineStore('explorer', {
 
     async goBack() {
       if (this.selectedFolder && this.selectedFolder.parentId) {
-        // Cari folder parent berdasarkan ID
-        // Anda mungkin perlu memanggil API untuk mendapatkan detail parent
-        // ATAU jika data parent sudah ada di state, tinggal panggil:
-        const parentFolder = { id: this.selectedFolder.parentId, name: 'Parent Folder' }; // Simplified
+        const parentFolder = { id: this.selectedFolder.parentId, name: 'Parent Folder' };
         await this.selectFolder(parentFolder as any);
       } else {
-        // Jika tidak ada parent, kembali ke root
         this.selectedFolder = null;
         this.subFolders = [];
         this.files = [];
@@ -130,13 +127,10 @@ export const useExplorerStore = defineStore('explorer', {
     async uploadFile(file: File) {
       this.loading = true;
       try {
-        // Ambil ID dari selectedFolder
         const folderId = this.selectedFolder ? this.selectedFolder.id : null;
 
-        // Panggil API dengan folderId
         const newFile = await uploadFile(file, folderId);
 
-        // Update local state
         this.files.push(newFile);
       } catch (error) {
         console.error('Upload failed', error);
@@ -167,7 +161,19 @@ export const useExplorerStore = defineStore('explorer', {
 
       const file = this.files.find(f => f.id === id);
       if (file) file.name = newName;
-    }
+    },
+
+    async selectFolderForContent(folder: Folder) {
+      this.loading = true;
+      this.selectedFolder = folder;
+      try {
+        const res = await fetchFolderContent(folder.id);
+        this.subFolders = res.folders;
+        this.files = res.files;
+      } finally {
+        this.loading = false;
+      }
+    },
 
   },
 });
